@@ -66,7 +66,7 @@ const COUNTRY_META = {
         function setIndicator(indKey, name, unit) {
           activeIndicator = indKey;
           document.querySelectorAll('.ind-btn').forEach(btn => {
-            btn.className = 'ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-white font-semibold text-xs transition text-left flex flex-col justify-between';
+            btn.className = 'ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-mistral-ink font-semibold text-xs transition text-left flex flex-col justify-between';
           });
 
           const map = {

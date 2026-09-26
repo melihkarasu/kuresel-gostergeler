@@ -3,40 +3,191 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Küresel Refah Göstergesi - Standalone</title>
+  <title>Küresel Refah Göstergesi</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23fa520f' stroke='%2344403c' stroke-width='1.5'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='-apple-system,BlinkMacSystemFont,Inter,sans-serif' font-weight='800' font-size='13' letter-spacing='-0.5'%3EMK%3C/text%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="css/mistral-theme.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c1917' stroke='%2344403c' stroke-width='1.5'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='-apple-system,BlinkMacSystemFont,Inter,sans-serif' font-weight='800' font-size='13' letter-spacing='-0.5'%3EMK%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="css/style.css">
-  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/mistral-theme.css">
   <style>
-    :root { --mistral-ink: #1c1917; --mistral-slate: #78716c; --mistral-stone: #a8a29e; --mistral-hairline: #e7e5e4; --mistral-cream: #f5f5f4; --mistral-beige-deep: #d6d3d1; }
-    body { font-family: 'Inter', sans-serif; background-color: #fafaf9; color: var(--mistral-ink); }
-    h1, h2, .font-editorial { font-family: 'Newsreader', serif; }
+    :root {
+      --mistral-ink: #1c1917;
+      --mistral-slate: #78716c;
+      --mistral-stone: #a8a29e;
+      --mistral-hairline: #e7e5e4;
+      --mistral-cream: #f5f5f4;
+      --mistral-cream-deeper: #e7e5e4;
+      --mistral-cream-light: #fafaf9;
+      --mistral-beige-deep: #d6d3d1;
+    }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #fafaf9; color: var(--mistral-ink); }
+    h1, h2, h3, h4, .font-editorial { font-family: 'Newsreader', serif; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .bg-mistral-cream { background-color: var(--mistral-cream); }
+    .bg-mistral-cream-deeper { background-color: var(--mistral-cream-deeper); }
+    .bg-mistral-cream-light { background-color: var(--mistral-cream-light); }
     .text-mistral-ink { color: var(--mistral-ink); }
     .text-mistral-slate { color: var(--mistral-slate); }
     .text-mistral-stone { color: var(--mistral-stone); }
-    .bg-mistral-cream { background-color: var(--mistral-cream); }
     .border-mistral-hairline { border-color: var(--mistral-hairline); }
-    .bg-mistral-canvas { background-color: #0f172a; }
+    .border-mistral-beige-deep { border-color: var(--mistral-beige-deep); }
+    .hover\\:bg-mistral-cream:hover { background-color: var(--mistral-cream) !important; }
+    .hover\\:text-mistral-ink:hover { color: var(--mistral-ink) !important; }
   </style>
 </head>
-<body class="p-4 md:p-8">
-  <div class="max-w-6xl mx-auto">
+<body class="p-4 sm:p-8">
+  <div class="max-w-7xl mx-auto">
     <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-3">
-          <a href="https://github.com/melihkarasu" target="_blank" class="text-mistral-slate hover:text-teal-500 transition text-sm flex items-center gap-1">&larr; GitHub Profiline Dön</a>
-          <span class="text-mistral-stone">|</span>
-          <span class="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-600 text-xs font-semibold">Open Source Edition</span>
+        <div>
+          <div class="flex items-center gap-3">
+            
+          </div>
+          <h1 class="text-3xl font-extrabold tracking-tight mt-1 text-mistral-ink flex items-center gap-2">
+            <span>📊</span> Küresel Refah & Kalkınma Göstergesi
+          </h1>
+          <p class="text-mistral-slate text-sm mt-0.5">
+            World Bank (Dünya Bankası) resmi verileri ile son 30 yıllık GSYİH, ömür, enflasyon ve refah endeksi analizi.
+          </p>
         </div>
-        <h1 class="text-3xl sm:text-4xl font-normal font-editorial tracking-tight mt-1.5 text-mistral-ink flex items-center gap-2"><span>📊</span> Küresel Refah Göstergesi</h1>
+
+        <div class="flex items-center gap-2">
+          <button onclick="exportDataCSV()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-mistral-cream text-mistral-ink text-xs font-bold transition flex items-center gap-1.5 border border-mistral-hairline">
+            <span>📥</span> Verileri İndir (.csv)
+          </button>
+        </div>
       </div>
-    </div>
-    
+
+      <!-- 1. GÖSTERGE VE ÜLKE KONTROL PANELİ -->
+      <div class="p-6 rounded-3xl bg-white border border-mistral-hairline shadow-xl mb-8 space-y-5">
+        
+        <!-- Üst: Gösterge Seçimi -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-mistral-slate mb-2">
+            Kalkınma & Refah Göstergesi
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+            <button onclick="setIndicator('NY.GDP.PCAP.KD', 'Kişi Başına GSYİH', 'Sabit 2015 USD ($)')" id="ind-gdp" class="ind-btn p-3 rounded-2xl bg-blue-600 text-white font-bold text-xs transition shadow text-left flex flex-col justify-between">
+              <span class="text-lg mb-1">💰</span>
+              <span>Kişi Başı GSYİH</span>
+            </button>
+            <button onclick="setIndicator('SP.DYN.LE00.IN', 'Beklenen Yaşam Süresi', 'Yıl')" id="ind-life" class="ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-mistral-ink font-semibold text-xs transition text-left flex flex-col justify-between">
+              <span class="text-lg mb-1">⏳</span>
+              <span>Yaşam Süresi</span>
+            </button>
+            <button onclick="setIndicator('FP.CPI.TOTL.ZG', 'TÜFE Enflasyon Oranı', 'Yıllık %')" id="ind-cpi" class="ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-mistral-ink font-semibold text-xs transition text-left flex flex-col justify-between">
+              <span class="text-lg mb-1">📈</span>
+              <span>Enflasyon (%)</span>
+            </button>
+            <button onclick="setIndicator('IT.NET.USER.ZS', 'İnternet Erişim Oranı', '% Nüfus')" id="ind-net" class="ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-mistral-ink font-semibold text-xs transition text-left flex flex-col justify-between">
+              <span class="text-lg mb-1">🌐</span>
+              <span>İnternet Erişimi</span>
+            </button>
+            <button onclick="setIndicator('EG.ELC.ACCS.ZS', 'Elektrik Erişim Oranı', '% Nüfus')" id="ind-elc" class="ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-mistral-ink font-semibold text-xs transition text-left flex flex-col justify-between">
+              <span class="text-lg mb-1">⚡</span>
+              <span>Elektrik Erişimi</span>
+            </button>
+            <button onclick="setIndicator('EG.FEC.RNEW.ZS', 'Yenilenebilir Enerji Payı', '% Toplam')" id="ind-renew" class="ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-mistral-ink font-semibold text-xs transition text-left flex flex-col justify-between">
+              <span class="text-lg mb-1">🌿</span>
+              <span>Yenilenebilir Enerji</span>
+            </button>
+            <button onclick="setIndicator('EN.ATM.CO2E.PC', 'Kişi Başı CO2 Salımı', 'Ton / Kişi')" id="ind-co2" class="ind-btn p-3 rounded-2xl bg-white border border-mistral-hairline text-mistral-slate hover:text-mistral-ink font-semibold text-xs transition text-left flex flex-col justify-between">
+              <span class="text-lg mb-1">🏭</span>
+              <span>Karbon Salımı</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alt: Karşılaştırılacak Ülkeler -->
+        <div class="pt-3 border-t border-mistral-hairline space-y-2">
+          <div class="flex items-center justify-between text-xs text-mistral-slate">
+            <span class="font-semibold text-mistral-slate">Karşılaştırılan Ülkeler:</span>
+            <span class="text-[11px] text-mistral-stone">en az bir, en fazla 5 ülke seçiniz</span>
+          </div>
+
+          <!-- Seçili Ülkeler Etiketleri -->
+          <div class="flex flex-wrap items-center gap-2" id="selected-countries-tags">
+            <!-- JS ile doldurulur -->
+          </div>
+
+          <!-- Hızlı Ülke Ekleme Butonları -->
+          <div class="flex flex-wrap items-center gap-1.5 text-xs pt-1">
+            <span class="text-mistral-stone text-[11px] mr-1">Hızlı Ekle:</span>
+            <button onclick="toggleCountry('DEU')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇩🇪 Almanya</button>
+            <button onclick="toggleCountry('USA')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇺🇸 ABD</button>
+            <button onclick="toggleCountry('GBR')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇬🇧 Birleşik Krallık</button>
+            <button onclick="toggleCountry('JPN')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇯🇵 Japonya</button>
+            <button onclick="toggleCountry('KOR')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇰🇷 G. Kore</button>
+            <button onclick="toggleCountry('CHN')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇨🇳 Çin</button>
+            <button onclick="toggleCountry('AZE')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇦🇿 Azerbaycan</button>
+            <button onclick="toggleCountry('BRA')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-mistral-cream border border-mistral-hairline text-mistral-slate transition">🇧🇷 Brezilya</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 2. ANLIK DEĞERLER VE ÖZET KARTLARI -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="latest-stats-cards">
+        <!-- JS ile doldurulur -->
+      </div>
+
+      <!-- 3. İNTERAKTİF ÇOKLU TREND GRAFİĞİ (CHART.JS) -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-white border border-mistral-hairline shadow-xl mb-8 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-base font-bold text-mistral-ink flex items-center gap-2">
+              <span id="chart-main-title">Kişi Başına GSYİH Tarihsel Trendi (1995 - 2024)</span>
+            </h3>
+            <p class="text-mistral-slate text-xs mt-0.5" id="chart-sub-title">Birim: Sabit 2015 USD ($)</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono text-mistral-slate" id="chart-legend-box">
+            <!-- Dinamik lejant -->
+          </div>
+        </div>
+
+        <div class="relative w-full h-80 sm:h-96 mt-2">
+          <canvas id="refah-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- 4. TARİHSEL VERİ TABLOSU -->
+      <div class="p-6 rounded-3xl bg-white border border-mistral-hairline shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-mistral-ink flex items-center gap-2">
+            <span>📋</span> Yıllara Göre Karşılaştırmalı Veri Tablosu
+          </h3>
+          <span class="text-xs text-mistral-slate font-mono">Dünya Bankası Kayıtları</span>
+        </div>
+
+        <div class="overflow-x-auto max-h-[350px] overflow-y-auto pr-1">
+          <table class="w-full text-left text-xs font-mono">
+            <thead>
+              <tr class="border-b border-mistral-hairline text-mistral-slate" id="table-header-row">
+                <th class="pb-2.5">Yıl</th>
+                <!-- Dinamik ülke başlıkları -->
+              </tr>
+            </thead>
+            <tbody id="table-body-rows" class="divide-y divide-slate-700/60">
+              <!-- JS ile doldurulur -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="loading-spinner" class="hidden py-16 text-center text-mistral-slate text-sm flex flex-col items-center gap-3">
+        <div class="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"></div>
+        <span>Dünya Bankası göstergeleri çekiliyor...</span>
+      </div>
+
+      <!-- Toast Bildirimi -->
+      <div id="refah-toast" class="hidden fixed bottom-6 right-6 py-2.5 px-4 rounded-xl bg-blue-500 text-white font-bold text-xs shadow-2xl transition z-50"></div>
+
+      <!-- İstemci Mantığı -->
   </div>
+
+  <footer class="mt-16 text-center text-xs text-mistral-stone border-t border-mistral-hairline pt-6">
+    <p>Açık Kaynak Standalone Sürüm • Veriler: <a href="https://data.worldbank.org/" target="_blank" rel="noopener" class="underline hover:text-mistral-ink">World Bank Open Data API</a></p>
+  </footer>
+
+  <script src="js/app.js"></script>
 </body>
 </html>
