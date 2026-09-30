@@ -18,8 +18,7 @@ const COUNTRY_META = {
           'FP.CPI.TOTL.ZG': { name: 'TÜFE Enflasyon Oranı', unit: 'Yıllık %', icon: '📈', decimals: 1 },
           'IT.NET.USER.ZS': { name: 'İnternet Kullanım Oranı', unit: '% Nüfus', icon: '🌐', decimals: 1 },
           'EG.ELC.ACCS.ZS': { name: 'Elektrik Erişim Oranı', unit: '% Nüfus', icon: '⚡', decimals: 1 },
-          'EG.FEC.RNEW.ZS': { name: 'Yenilenebilir Enerji Payı', unit: '% Toplam', icon: '🌿', decimals: 1 },
-          'EN.ATM.CO2E.PC': { name: 'Kişi Başına Karbon Salımı', unit: 'Ton / Kişi', icon: '🏭', decimals: 2 }
+          'EG.FEC.RNEW.ZS': { name: 'Yenilenebilir Enerji Payı', unit: '% Toplam', icon: '🌿', decimals: 1 }
         };
 
         let activeIndicator = 'NY.GDP.PCAP.KD';
@@ -75,8 +74,7 @@ const COUNTRY_META = {
             'FP.CPI.TOTL.ZG': 'ind-cpi',
             'IT.NET.USER.ZS': 'ind-net',
             'EG.ELC.ACCS.ZS': 'ind-elc',
-            'EG.FEC.RNEW.ZS': 'ind-renew',
-            'EN.ATM.CO2E.PC': 'ind-co2'
+            'EG.FEC.RNEW.ZS': 'ind-renew'
           };
           const activeBtn = document.getElementById(map[indKey]);
           if (activeBtn) {
@@ -90,13 +88,15 @@ const COUNTRY_META = {
         }
 
         // 3. Veri Çekme (World Bank API)
+        const DATA_END_YEAR = new Date().getFullYear(); // Veriler otomatik olarak güncel yıla kadar çekilir
+
         async function loadIndicatorData() {
           showLoading(true);
           currentRawData = {};
 
           try {
             const countriesParam = selectedCountries.join(';');
-            const url = `https://api.worldbank.org/v2/country/${countriesParam}/indicator/${activeIndicator}?format=json&date=1995:2024&per_page=300`;
+            const url = `https://api.worldbank.org/v2/country/${countriesParam}/indicator/${activeIndicator}?format=json&date=1995:${DATA_END_YEAR}&per_page=300`;
             
             const res = await fetch(url);
             const data = await res.json();
